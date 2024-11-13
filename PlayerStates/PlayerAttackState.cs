@@ -1,0 +1,42 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEditor.ProjectWindowCallback;
+using UnityEngine;
+
+public class PlayerAttackState : PlayerState
+{
+    public PlayerAttackState(Player _player, PlayerStateMachine _stateMachine, string _animBoolName) : base(_player, _stateMachine, _animBoolName)
+    {
+    }
+
+    public override void Enter()
+    {
+        base.Enter();
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+        player.AcceptInput = true;
+        player.SetVelocity(0, 0); //给角色一个速度
+    }
+
+    public override void Update()
+    {
+        base.Update();
+        
+        if (player.anim.GetFloat("AttackCounter") == 2 && player.anim.GetFloat("SpecialKeys") == 2)
+        {
+            player.SetVelocity(player.facingDir*12*-1, -12);
+            player.AcceptInput = false;
+            if (player.IsGrounded)
+            {
+                stateMachine.ChangeState(player.idleState);
+            }
+        }
+        else
+        {
+            player.SetVelocity(xInput*player.moveSpeed, rb.velocity.y); //给角色一个速度
+        }
+    }
+}
