@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     public float jumpForce = 1;
     public float dashForce = 10.0f;
     public float jumpTimeLimited;    //跳跃时间限制
+    public bool isStillJumping;
 
     public int facingDir = 1; // 1 = left;, -1 = right
 
@@ -63,7 +64,7 @@ public class Player : MonoBehaviour
         jumpTimeLimited -= Time.deltaTime;
     #region input detection
         /////JUMP
-        if (rb.velocity.y > 0.1 && !IsGrounded && AcceptInput && !(stateMachine.currentState is PlayerAttackState)&& !(stateMachine.currentState is PlayerJumpState))
+        if (rb.velocity.y > 0.01 && !IsGrounded && AcceptInput && !(stateMachine.currentState is PlayerAttackState) && !(stateMachine.currentState is PlayerJumpState))
         {
             stateMachine.ChangeState(jumpState);
         }
@@ -78,9 +79,14 @@ public class Player : MonoBehaviour
             jumpTimeLimited = .5f;
         }
 
-        if (jumpTimeLimited >= 0 && Input.GetKey(KeyCode.Z)) ///
+        if (jumpTimeLimited >= 0 && Input.GetKey(KeyCode.Z) && isStillJumping && ((stateMachine.currentState is PlayerJumpState)||((stateMachine.currentState is PlayerAttackState) && !(anim.GetFloat("AttackCounter") == 2)))) ///
         {
             SetVelocity(rb.velocity.x, jumpForce);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Z) && !IsGrounded)
+        {
+            isStillJumping = false;
         }
 
         /////////FALL
@@ -98,6 +104,7 @@ public class Player : MonoBehaviour
         if (IsGrounded)
         {
             canDash = true;
+            isStillJumping = true;
         }
 
         ////////ATTACK
@@ -120,7 +127,7 @@ public class Player : MonoBehaviour
                 anim.SetFloat("SpecialKeys", 1);
                 anim.SetFloat("AttackCounter", 2);
             }
-            else if (Input.GetKey(KeyCode.DownArrow))
+            else if (Input.GetKey(KeyCode.DownArrow) && !IsGrounded)
             {
                 anim.SetFloat("SpecialKeys", 2);
                 anim.SetFloat("AttackCounter", 2);

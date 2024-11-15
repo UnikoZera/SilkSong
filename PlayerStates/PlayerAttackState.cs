@@ -18,7 +18,6 @@ public class PlayerAttackState : PlayerState
     {
         base.Exit();
         player.AcceptInput = true;
-        player.SetVelocity(0, 0); //给角色一个速度
     }
 
     public override void Update()
@@ -36,7 +35,7 @@ public class PlayerAttackState : PlayerState
         }
         else
         {
-            player.SetVelocity(xInput*player.moveSpeed, rb.velocity.y); //给角色一个速度
+            player.SetVelocity(xInput*player.moveSpeed, rb.velocity.y);
         }
     }
 }

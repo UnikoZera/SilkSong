@@ -39,5 +39,14 @@ public class PlayerMoveState : PlayerState
         {
             player.anim.SetBool("isMoving", true);
         }
+
+        if (rb.velocity.x > 0 && player.isFacingLeft)
+        { 
+            player.anim.SetBool("isMoving", false);
+        }
+        else if (rb.velocity.x < 0 && !player.isFacingLeft)
+        { 
+            player.anim.SetBool("isMoving", false);
+        }
     }
 }

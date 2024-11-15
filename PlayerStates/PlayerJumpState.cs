@@ -17,7 +17,7 @@ public class PlayerJumpState : PlayerState
     public override void Exit()
     {
         base.Exit();
-        rb.gravityScale = 2; // 设置重力
+        rb.gravityScale = 3; // 设置重力
     }
 
     public override void Update()
