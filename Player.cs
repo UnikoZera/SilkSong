@@ -79,7 +79,7 @@ public class Player : MonoBehaviour
             jumpTimeLimited = .5f;
         }
 
-        if (jumpTimeLimited >= 0 && Input.GetKey(KeyCode.Z) && isStillJumping && ((stateMachine.currentState is PlayerJumpState)||((stateMachine.currentState is PlayerAttackState) && !(anim.GetFloat("AttackCounter") == 2)))) ///
+        if (jumpTimeLimited >= 0 && isStillJumping && ((stateMachine.currentState is PlayerJumpState)||((stateMachine.currentState is PlayerAttackState) && !(anim.GetFloat("AttackCounter") == 2) && !IsGrounded))) ///
         {
             SetVelocity(rb.velocity.x, jumpForce);
         }

@@ -661,7 +661,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   moveSpeed: 5
-  jumpForce: 7
+  jumpForce: 8
   dashForce: 13
   jumpTimeLimited: 0.5
   isStillJumping: 0
