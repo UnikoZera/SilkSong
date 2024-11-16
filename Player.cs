@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
 
     private int attackAnimCounter = 0;
 
+    [Header("Player Stats Info")]
     public float moveSpeed = 6;
     public float jumpForce = 1;
     public float dashForce = 10.0f;
@@ -21,6 +22,10 @@ public class Player : MonoBehaviour
     public bool isStillJumping;
 
     public int facingDir = 1; // 1 = left;, -1 = right
+
+    [Header("Player Attack Info")]
+    public Transform attackPos;
+    public float attackRange;
 
 
 #region states
@@ -93,6 +98,11 @@ public class Player : MonoBehaviour
         if (rb.velocity.y < 0 && !IsGrounded && !(stateMachine.currentState is PlayerAttackState) && !(stateMachine.currentState is PlayerFallState))
         {
             stateMachine.ChangeState(fallState);
+        }
+
+        if (rb.velocity.y < -21)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, -21);
         }
 
         ////////DASH

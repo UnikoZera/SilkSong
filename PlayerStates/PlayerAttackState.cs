@@ -18,6 +18,7 @@ public class PlayerAttackState : PlayerState
     {
         base.Exit();
         player.AcceptInput = true;
+        player.SetVelocity(0, rb.velocity.y);
     }
 
     public override void Update()
