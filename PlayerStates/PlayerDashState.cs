@@ -34,6 +34,10 @@ public class PlayerDashState : PlayerState
         base.Exit();
         player.AcceptInput = true;
         player.SetVelocity(0, 0);
+        if ((Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)) && player.IsGrounded)
+        {
+            player.anim.SetBool("canRunning?", true);
+        }
     }
 
     public override void Update()

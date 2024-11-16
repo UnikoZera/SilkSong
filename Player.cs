@@ -76,7 +76,10 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Z) && IsGrounded && AcceptInput && !(stateMachine.currentState is PlayerJumpState))
         {   
-            stateMachine.ChangeState(jumpState);
+            if (stateMachine.currentState is PlayerAttackState && !(anim.GetFloat("AttackCounter") == 2))
+            {}
+            else
+                stateMachine.ChangeState(jumpState);
         }
 
         if (!(stateMachine.currentState is PlayerJumpState) && IsGrounded) //
@@ -84,12 +87,12 @@ public class Player : MonoBehaviour
             jumpTimeLimited = .5f;
         }
 
-        if (jumpTimeLimited >= 0 && isStillJumping && ((stateMachine.currentState is PlayerJumpState)||((stateMachine.currentState is PlayerAttackState) && !(anim.GetFloat("AttackCounter") == 2) && !IsGrounded))) ///
-        {
+        if (jumpTimeLimited >= 0 && isStillJumping && Input.GetKey(KeyCode.Z) && ((stateMachine.currentState is PlayerJumpState)||((stateMachine.currentState is PlayerAttackState) && !(anim.GetFloat("AttackCounter") == 2)))) ///
+        {            
             SetVelocity(rb.velocity.x, jumpForce);
         }
 
-        if (Input.GetKeyUp(KeyCode.Z) && !IsGrounded)
+        if (!Input.GetKey(KeyCode.Z) && !IsGrounded)
         {
             isStillJumping = false;
         }
@@ -115,6 +118,10 @@ public class Player : MonoBehaviour
         {
             canDash = true;
             isStillJumping = true;
+        }
+        if (!IsGrounded && rb.velocity.y <= 0)
+        {
+            isStillJumping = false;
         }
 
         ////////ATTACK

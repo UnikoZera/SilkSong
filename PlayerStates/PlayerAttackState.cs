@@ -19,6 +19,10 @@ public class PlayerAttackState : PlayerState
         base.Exit();
         player.AcceptInput = true;
         player.SetVelocity(0, rb.velocity.y);
+        if ((Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)) && player.IsGrounded)
+        {
+            player.anim.SetBool("canRunning?", true);
+        }
     }
 
     public override void Update()

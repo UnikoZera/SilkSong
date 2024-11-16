@@ -16,6 +16,10 @@ public class PlayerFallState : PlayerState
     public override void Exit()
     {
         base.Exit();
+        if ((Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)) && player.IsGrounded)
+        {
+            player.anim.SetBool("canRunning?", true);
+        }
     }
 
     public override void Update()

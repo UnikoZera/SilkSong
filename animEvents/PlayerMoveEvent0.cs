@@ -14,4 +14,9 @@ public class PlayerMoveEvent0 : MonoBehaviour
     {
         player.anim.SetBool("canRunning?", true);
     }
+
+    public void AnimationTriggerForNext2() //动画事件
+    {
+        player.anim.SetBool("canRunning?", false);
+    }
 }
