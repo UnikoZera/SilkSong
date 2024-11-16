@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Principal;
 using UnityEngine;
 
 public class PlayerDashState : PlayerState
@@ -8,10 +9,24 @@ public class PlayerDashState : PlayerState
     {
     }
 
+    private int instantDashDir; // -1 = left, 1 = right
+
     public override void Enter()
     {
         base.Enter();
         player.AcceptInput = false;
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            instantDashDir = 1;
+        }
+        else if (Input.GetKey(KeyCode.RightArrow))
+        {
+            instantDashDir = -1;
+        }
+        else
+        {
+            instantDashDir = player.facingDir;
+        }
     }
 
     public override void Exit()
@@ -24,6 +39,7 @@ public class PlayerDashState : PlayerState
     public override void Update()
     {
         base.Update();
-        rb.velocity = new Vector2(player.facingDir * player.dashForce*-1, 0);
+        rb.velocity = new Vector2(instantDashDir * player.dashForce*-1, 0);
+        player.FlipController();
     }
 }
