@@ -35,6 +35,7 @@ public class Player : MonoBehaviour
     public PlayerJumpState jumpState { get; private set; }
     public PlayerAttackState attackState { get; private set; }
     public PlayerFallState fallState { get; private set; }
+    public PlayerNormalSpellState normalSpellState { get; private set; }
 #endregion
 
 #region keyVariables
@@ -53,6 +54,7 @@ public class Player : MonoBehaviour
         dashState = new PlayerDashState(this, stateMachine, "Dash");
         attackState = new PlayerAttackState(this, stateMachine, "Attacking");
         fallState = new PlayerFallState(this, stateMachine, "isFalling");
+        normalSpellState = new PlayerNormalSpellState(this, stateMachine, "normalSpell");
 
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
