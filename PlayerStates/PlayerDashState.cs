@@ -38,6 +38,7 @@ public class PlayerDashState : PlayerState
         {
             player.anim.SetBool("canRunning?", true);
         }
+        player.dashTimeLimited = .5f;
     }
 
     public override void Update()

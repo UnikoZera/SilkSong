@@ -23,6 +23,6 @@ public class PlayerNormalSpellState : PlayerState
     public override void Update()
     {
         base.Update();
-        rb.velocity = new Vector2(0, 0);//停止移动
+        player.SetVelocity(0, 0);
     }
 }

@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     public Animator anim { get; private set; }
     public Rigidbody2D rb { get; private set; }
     [SerializeField] private LayerMask whatIsGround; 
+    [SerializeField] private LayerMask whatIsWall;
 
     private int attackAnimCounter = 0;
 
@@ -19,14 +20,23 @@ public class Player : MonoBehaviour
     public float jumpForce = 1;
     public float dashForce = 10.0f;
     public float jumpTimeLimited;    //跳跃时间限制
-    public bool isStillJumping;
-
+    public float dashTimeLimited;    //冲刺时间限制
     public int facingDir = 1; // 1 = left;, -1 = right
 
     [Header("Player Attack Info")]
     public Transform attackPos;
     public float attackRange;
 
+
+    [Header("Variables")]
+#region keyVariables
+    public bool isStillJumping;
+    public bool AcceptInput = true;
+    public bool atBench;
+    public bool IsGrounded;
+    public bool isFacingLeft = true;
+    public bool canDash = true;
+#endregion
 
 #region states
     public PlayerIdleState idleState { get; private set; }
@@ -37,14 +47,6 @@ public class Player : MonoBehaviour
     public PlayerFallState fallState { get; private set; }
     public PlayerNormalSpellState normalSpellState { get; private set; }
 #endregion
-
-#region keyVariables
-    public bool AcceptInput = true;
-    public bool atBench;
-    public bool IsGrounded;
-    public bool isFacingLeft = true;
-    public bool canDash = true;
-#endregion
     private void Awake()
     {
         stateMachine = new PlayerStateMachine();
@@ -54,7 +56,7 @@ public class Player : MonoBehaviour
         dashState = new PlayerDashState(this, stateMachine, "Dash");
         attackState = new PlayerAttackState(this, stateMachine, "Attacking");
         fallState = new PlayerFallState(this, stateMachine, "isFalling");
-        normalSpellState = new PlayerNormalSpellState(this, stateMachine, "normalSpell");
+        normalSpellState = new PlayerNormalSpellState(this, stateMachine, "NormalSpell");
 
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
@@ -69,6 +71,7 @@ public class Player : MonoBehaviour
     {
         stateMachine.currentState.Update();
         jumpTimeLimited -= Time.deltaTime;
+        dashTimeLimited -= Time.deltaTime;
     #region input detection
         /////JUMP
         if (rb.velocity.y > 0.01 && !IsGrounded && AcceptInput && !(stateMachine.currentState is PlayerAttackState) && !(stateMachine.currentState is PlayerJumpState))
@@ -116,9 +119,12 @@ public class Player : MonoBehaviour
             stateMachine.ChangeState(dashState);
             canDash = false;
         }
-        if (IsGrounded)
+        if (IsGrounded && dashTimeLimited <= 0)
         {
             canDash = true;
+        }
+        if ((IsGrounded && Input.GetKeyDown(KeyCode.Z)) || (!IsGrounded && Input.GetKey(KeyCode.Z)))
+        {
             isStillJumping = true;
         }
         if (!IsGrounded && rb.velocity.y <= 0)
@@ -159,6 +165,12 @@ public class Player : MonoBehaviour
 
             stateMachine.ChangeState(attackState);
         }
+        
+        ////////NORMAL SPELL
+        if (Input.GetKeyDown(KeyCode.F) && AcceptInput)
+        {
+            // stateMachine.ChangeState(normalSpellState);
+        }
     #endregion
     }
 
@@ -185,7 +197,7 @@ public class Player : MonoBehaviour
             Flip();
         }
     }
-    // 触发器进入时调用
+    //落地检查
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
@@ -193,7 +205,6 @@ public class Player : MonoBehaviour
             IsGrounded = true;
         }
     }
-    // 触发器退出时调用
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
